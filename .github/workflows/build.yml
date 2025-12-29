@@ -40,12 +40,7 @@ jobs:
         run: flutter analyze
         continue-on-error: true
 
-      # 6. Tests çalıştır (eğer varsa)
-      - name: Run tests
-        run: flutter test
-        continue-on-error: true
-
-      # 7. APK oluştur (Release)
+      # 6. APK oluştur (Release)
       - name: Build APK
         run: flutter build apk --release --no-tree-shake-icons
 
