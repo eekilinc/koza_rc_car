@@ -1,70 +1,40 @@
-name: Flutter Build & Release
+name: Build APK
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [ main, develop ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-      # 1. Kodu indir
       - uses: actions/checkout@v4
 
-      # 2. Java SDK kur
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3. Flutter SDK kur
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.10.0'
           channel: 'stable'
           cache: true
 
-      # 4. Pub Cache kur
-      - name: Cache pub dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pub-cache
-            .dart_tool
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-
-
-      # 5. Dependencies al
-      - name: Get dependencies
-        run: flutter pub get
-
-      # 6. Build APK
       - name: Build APK Release
-        run: flutter build apk --release
-
-      # 7. Artifact'e yükle
-      - name: Upload APK Artifact
+        run: |
+          flutter clean
+          flutter pub get --verbose
+          flutter build apk --release
+        
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         if: success()
         with:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
-
-      # 8. Başarı mesajı
-      - name: Build Success
-        if: success()
-        run: echo "✅ APK başarıyla oluşturuldu!"
-
-      # 9. Hata mesajı
-      - name: Build Failed
-        if: failure()
-        run: echo "❌ Build başarısız oldu"
 
