@@ -1,0 +1,14 @@
+{
+    "name": "Flutter WSL-Docker Dev",
+    "build": { "dockerfile": "Dockerfile" },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dart-code.flutter",
+                "dart-code.dart-code"
+            ]
+        }
+    },
+    "remoteUser": "root",
+    "forwardPorts": [8080] 
+}
