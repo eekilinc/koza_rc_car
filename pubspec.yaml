@@ -39,7 +39,7 @@ dependencies:
   
   # Bluetooth packages for HC-06 communication
   flutter_blue_plus: ^1.36.8
-  permission_handler: ^11.4.1
+  permission_handler: ^11.0.0
   shared_preferences: ^2.3.1
 
 dev_dependencies:
