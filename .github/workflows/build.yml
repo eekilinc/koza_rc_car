@@ -27,7 +27,6 @@ jobs:
       - name: Build APK Release
         run: |
           flutter clean
-          flutter pub get --verbose
           flutter build apk --release
         
       - name: Upload APK
