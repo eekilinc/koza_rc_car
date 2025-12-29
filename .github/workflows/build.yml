@@ -1,0 +1,92 @@
+name: Flutter Build & Release
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Kodu indir
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. Java SDK kur (Android build için)
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3. Flutter SDK kur
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.0'
+          channel: 'stable'
+
+      # 4. Dependencies al
+      - name: Get dependencies
+        run: flutter pub get
+
+      # 5. Kod analizi
+      - name: Analyze code
+        run: flutter analyze
+        continue-on-error: true
+
+      # 6. Tests çalıştır (eğer varsa)
+      - name: Run tests
+        run: flutter test
+        continue-on-error: true
+
+      # 7. APK oluştur (Release)
+      - name: Build APK
+        run: flutter build apk --release --no-tree-shake-icons
+
+      # 8. APK dosyasını yükle (artifact)
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      # 9. Başarı/Hata bildirimi
+      - name: Build Status
+        if: success()
+        run: echo "✅ Build başarılı!"
+
+      - name: Build Failed
+        if: failure()
+        run: |
+          echo "❌ Build başarısız oldu!"
+          exit 1
+
+  # Release job (sadece tag yüklenmesinde)
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download APK
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.apk
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: app-release.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
