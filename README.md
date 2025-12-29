@@ -39,10 +39,31 @@ RC araba modelinizi Bluetooth aracılığıyla kontrol etmek için tasarlanmış
 
 ## 🚀 Hızlı Başlangıç
 
+### 📲 Direkt İndir (QR Code ile)
+
+Cihazında QR okuyucu aç ve tara:
+
+```
+┌─────────────────────────────┐
+│                             │
+│  [QR CODE - TRA BU]         │
+│                             │
+│  ↓ Doğrudan indir ↓         │
+│  app-release.apk (49 MB)    │
+│                             │
+└─────────────────────────────┘
+```
+
+![Download APK QR Code](https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://github.com/eekilinc/koza_rc_car/releases/download/v1.0.0/app-release.apk)
+
+[📥 GitHub Releases'ten İndir](https://github.com/eekilinc/koza_rc_car/releases/download/v1.0.0/app-release.apk)
+
+---
+
 ### Adım 1: Uygulamayı Yükle
 ```bash
 # APK'yı cihazına kur
-adb install build/app/outputs/flutter-apk/app-release.apk
+adb install app-release.apk
 ```
 
 ### Adım 2: Bluetooth Eşleştir
