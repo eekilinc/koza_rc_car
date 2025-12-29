@@ -37,7 +37,35 @@ RC araba modelinizi Bluetooth aracılığıyla kontrol etmek için tasarlanmış
 
 ---
 
-## 🚀 Hızlı Başlangıç
+## � Ekran Görüntüleri
+
+### Ana Sayfa & D-Pad Kontrolü
+```
+┌─────────────────────────────┐
+│   Koza RC Car               │
+│   ⊙ Bağlı Değil     [Bağlan]│
+│                             │
+│   Seçim                     │
+│   [D-Pad] Joystick Özellik  │
+│                             │
+│        ▲                    │
+│      ◄ ◆ ►                  │
+│        ▼                    │
+│                             │
+│   Son Komut: Hiçbiri        │
+│           [ⓘ]               │
+└─────────────────────────────┘
+```
+
+- **Bağlı Değil**: Bluetooth bağlantı durumu
+- **D-Pad**: 4 yön hareketi
+- **Joystick**: Analog kontrol (alternatif)
+- **Özellik**: LED, Ses, Hız ayarları
+- **Help Button (ⓘ)**: Kontroller hakkında bilgi
+
+---
+
+## �🚀 Hızlı Başlangıç
 
 ### 📲 Direkt İndir (QR Code ile)
 
