@@ -33,7 +33,9 @@ jobs:
 
       # 4. Dependencies al
       - name: Get dependencies
-        run: flutter pub get
+        run: |
+          flutter pub get
+          flutter pub get --verbose
 
       # 5. Kod analizi
       - name: Analyze code
@@ -42,7 +44,7 @@ jobs:
 
       # 6. APK oluştur (Release)
       - name: Build APK
-        run: flutter build apk --release --no-tree-shake-icons
+        run: flutter build apk --release
 
       # 8. APK dosyasını yükle (artifact)
       - name: Upload APK
