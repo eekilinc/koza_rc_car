@@ -5,7 +5,7 @@
 [![Android](https://img.shields.io/badge/Android-5.0%2B-3DDC84?logo=android)](https://www.android.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-RC araba modelinizi Bluetooth aracılığıyla kontrol etmek için tasarlanmış, zengin özelliklere sahip bir Flutter uygulaması.
+RC araba modelinizi Bluetooth aracılığıyla kontrol etmek için tasarlanmış, zengin özelliklere sahip bir Flutter uygulaması.<br><br>
 
 ---
 
@@ -40,21 +40,7 @@ RC araba modelinizi Bluetooth aracılığıyla kontrol etmek için tasarlanmış
 ## � Ekran Görüntüleri
 
 ### Ana Sayfa & D-Pad Kontrolü
-```
-┌─────────────────────────────┐
-│   Koza RC Car               │
-│   ⊙ Bağlı Değil     [Bağlan]│
-│                             │
-│   Seçim                     │
-│   [D-Pad] Joystick Özellik  │
-│                             │
-│        ▲                    │
-│      ◄ ◆ ►                  │
-│        ▼                    │
-│                             │
-│   Son Komut: Hiçbiri        │
-│           [ⓘ]               │
-└─────────────────────────────┘
+<img src="https://github.com/user-attachments/assets/47b4f494-45f7-47d9-bcd2-8123f7d3b06b" width="40%" height="40%" style="align:center;" />
 ```
 
 - **Bağlı Değil**: Bluetooth bağlantı durumu
