@@ -3,7 +3,6 @@ name: Build APK
 on:
   push:
     branches: [ main, develop ]
-    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
 
@@ -13,6 +12,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/')
 
     steps:
       - uses: actions/checkout@v4
@@ -40,59 +40,4 @@ jobs:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
-
-  release:
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-    
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.38.5'
-          channel: 'stable'
-          cache: true
-
-      - name: Build APK for Release
-        run: |
-          flutter clean
-          flutter build apk --release
-
-      - name: Create GitHub Release with APK
-        uses: softprops/action-gh-release@v1
-        with:
-          files: build/app/outputs/flutter-apk/app-release.apk
-          body: |
-            🚀 **KOZA RC Araba Kontrol Uygulaması**
-            
-            Bu sürüm aşağıdaki özellikleri içerir:
-            
-            ✨ **Yenilikler:**
-            - Son bağlanan cihazlar geçmişini silme özelliği
-            - Hızlı cihaz erişimi (son 5 cihaz)
-            - Bluetooth Classic ve BLE desteği
-            - RC kontrolü (D-Pad, Joystick, Instant Mode)
-            - İşaret gücü göstergesi
-            - Türkçe ve İngilizce dil desteği
-            
-            📱 **Gereksinimler:**
-            - Android 5.0 (API 21) ve üzeri
-            - Bluetooth 4.0 (HC-06 veya BLE cihazları)
-            
-            🔧 **Kurulum:**
-            APK dosyasını indirip Android cihazınıza yükleyin.
-            
-            📖 **Kullanım:**
-            1. Uygulamayı açın
-            2. Bluetooth modu seçin (Classic veya BLE)
-            3. RC araç cihazını seçin
-            4. Kontrolleri kullanarak araç yönetin
-          draft: false
-          prerelease: false
 
