@@ -82,6 +82,39 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
     }
   }
 
+  Future<void> _clearRecentlyConnected() async {
+    // Show confirmation dialog
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Son Bağlananları Temizle'),
+        content: const Text('Tüm son bağlanan cihazları silmek istediğinize emin misiniz?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('İptal'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              try {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.remove('recently_connected_devices');
+                _loadRecentlyConnectedDevices();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Son bağlananlar temizlendi')),
+                );
+              } catch (e) {
+                print('Error clearing recently connected: $e');
+              }
+            },
+            child: const Text('Temizle', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _loadAvailableDevices() async {
     setState(() => _isLoading = true);
 
@@ -507,13 +540,27 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Icon(Icons.history, color: Colors.purple[700]),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Son Bağlanan Cihazlar',
-                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  color: Colors.purple[700],
+                              Row(
+                                children: [
+                                  Icon(Icons.history, color: Colors.purple[700]),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Son Bağlanan Cihazlar',
+                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                      color: Colors.purple[700],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              TextButton.icon(
+                                onPressed: _clearRecentlyConnected,
+                                icon: const Icon(Icons.delete_outline, size: 18),
+                                label: const Text('Temizle'),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.red[700],
+                                  padding: const EdgeInsets.symmetric(horizontal: 8),
                                 ),
                               ),
                             ],
