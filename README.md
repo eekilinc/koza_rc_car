@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 RC araba modelinizi Bluetooth aracılığıyla kontrol etmek için tasarlanmış, zengin özelliklere sahip bir Flutter uygulaması.
-<img src="https://github.com/user-attachments/assets/47b4f494-45f7-47d9-bcd2-8123f7d3b06b" width="300" height="600" />
+<img src="https://github.com/user-attachments/assets/47b4f494-45f7-47d9-bcd2-8123f7d3b06b" width="400" height="600" style="align:center;" />
 
 
 
