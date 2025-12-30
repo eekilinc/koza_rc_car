@@ -542,26 +542,30 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.history, color: Colors.purple[700]),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Son Bağlanan Cihazlar',
-                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                      color: Colors.purple[700],
+                              Flexible(
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.history, color: Colors.purple[700]),
+                                    const SizedBox(width: 8),
+                                    Flexible(
+                                      child: Text(
+                                        'Son Bağlanan Cihazlar',
+                                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                          color: Colors.purple[700],
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              TextButton.icon(
-                                onPressed: _clearRecentlyConnected,
-                                icon: const Icon(Icons.delete_outline, size: 18),
-                                label: const Text('Temizle'),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.red[700],
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  ],
                                 ),
+                              ),
+                              IconButton(
+                                onPressed: _clearRecentlyConnected,
+                                icon: const Icon(Icons.delete_outline),
+                                color: Colors.red[700],
+                                tooltip: 'Geçmiş Temizle',
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
                               ),
                             ],
                           ),
