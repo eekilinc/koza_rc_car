@@ -70,5 +70,4 @@ jobs:
           files: build/app/outputs/flutter-apk/app-release.apk
           draft: false
           prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
 
