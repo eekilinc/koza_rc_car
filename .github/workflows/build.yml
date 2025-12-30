@@ -68,6 +68,31 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: build/app/outputs/flutter-apk/app-release.apk
+          body: |
+            🚀 **KOZA RC Araba Kontrol Uygulaması**
+            
+            Bu sürüm aşağıdaki özellikleri içerir:
+            
+            ✨ **Yenilikler:**
+            - Son bağlanan cihazlar geçmişini silme özelliği
+            - Hızlı cihaz erişimi (son 5 cihaz)
+            - Bluetooth Classic ve BLE desteği
+            - RC kontrolü (D-Pad, Joystick, Instant Mode)
+            - İşaret gücü göstergesi
+            - Türkçe ve İngilizce dil desteği
+            
+            📱 **Gereksinimler:**
+            - Android 5.0 (API 21) ve üzeri
+            - Bluetooth 4.0 (HC-06 veya BLE cihazları)
+            
+            🔧 **Kurulum:**
+            APK dosyasını indirip Android cihazınıza yükleyin.
+            
+            📖 **Kullanım:**
+            1. Uygulamayı açın
+            2. Bluetooth modu seçin (Classic veya BLE)
+            3. RC araç cihazını seçin
+            4. Kontrolleri kullanarak araç yönetin
           draft: false
           prerelease: false
 
