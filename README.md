@@ -71,20 +71,9 @@ RC araba modelinizi Bluetooth aracılığıyla kontrol etmek için tasarlanmış
 
 Cihazında QR okuyucu aç ve tara:
 
-```
-┌─────────────────────────────┐
-│                             │
-│  [QR CODE - TRA BU]         │
-│                             │
-│  ↓ Doğrudan indir ↓         │
-│  app-release.apk (49 MB)    │
-│                             │
-└─────────────────────────────┘
-```
+![Download APK QR Code](https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://github.com/eekilinc/koza_rc_car/releases/download/v1.0.0/koza_rc_car_v1.0.0.apk)
 
-![Download APK QR Code](https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://github.com/eekilinc/koza_rc_car/releases/download/v1.0.0/app-release.apk)
-
-[📥 GitHub Releases'ten İndir](https://github.com/eekilinc/koza_rc_car/releases/download/v1.0.0/app-release.apk)
+[📥 APK'yı İndir (47 MB)](https://github.com/eekilinc/koza_rc_car/releases/download/v1.0.0/koza_rc_car_v1.0.0.apk)
 
 ---
 
