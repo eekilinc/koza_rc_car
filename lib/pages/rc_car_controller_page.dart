@@ -33,6 +33,43 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   void initState() {
     super.initState();
     _loadCommandConfig();
+    _monitorConnectionState();
+  }
+
+  void _monitorConnectionState() {
+    // Periodically check if connection is still active
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      
+      // Check if device is still connected
+      if (!_bluetoothService.isConnected && _connectedDevice != null) {
+        // Bluetooth connection was lost
+        _handleDisconnection();
+      } else if (mounted) {
+        // Continue monitoring
+        _monitorConnectionState();
+      }
+    });
+  }
+
+  void _handleDisconnection() {
+    if (!mounted) return;
+    
+    setState(() {
+      _connectedDevice = null;
+    });
+
+    // Show snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Bluetooth bağlantısı kesildi!'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      ),
+    );
+
+    // Go back to device selection
+    Navigator.pushReplacementNamed(context, '/');
   }
 
   void _loadCommandConfig() {
