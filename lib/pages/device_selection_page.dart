@@ -444,6 +444,20 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
       appBar: AppBar(
         title: const Text('Bluetooth Bağlan'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Cihazları Yenile',
+            onPressed: _isLoading ? null : () async {
+              setState(() => _isLoading = true);
+              await _loadAvailableDevices();
+              setState(() => _isLoading = false);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Cihazlar yenilendi')),
+              );
+            },
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
