@@ -39,10 +39,8 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   }
 
   void _startMonitoring() {
-    if (_isMonitoring) return; // Already monitoring
-    
-    _isMonitoring = true;
-    _monitorConnectionState();
+    // Monitoring disabled - connection is checked via command failures
+    _isMonitoring = false;
   }
 
   void _stopMonitoring() {
@@ -50,31 +48,7 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   }
 
   void _monitorConnectionState() {
-    if (!_isMonitoring || !mounted) return;
-    
-    // Check every 5 seconds (longer interval to avoid false positives)
-    Future.delayed(const Duration(seconds: 5), () {
-      if (!mounted || !_isMonitoring) return;
-      
-      // Check if device is still connected
-      if (!_bluetoothService.isConnected && _connectedDevice != null) {
-        // Increment disconnect counter (debounce)
-        _disconnectCount++;
-        
-        // Only disconnect after 3 consecutive failures (15 seconds total)
-        if (_disconnectCount >= _disconnectThreshold) {
-          _handleDisconnection();
-        } else {
-          // Continue monitoring
-          _monitorConnectionState();
-        }
-      } else if (mounted && _isMonitoring) {
-        // Connection is good, reset counter
-        _disconnectCount = 0;
-        // Continue monitoring
-        _monitorConnectionState();
-      }
-    });
+    // Monitoring disabled - connection is checked via command failures
   }
 
   void _handleDisconnection() {
@@ -120,24 +94,9 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
         _connectedDevice = device;
       });
       
-      // Wait 2 seconds for connection to establish before monitoring
-      await Future.delayed(const Duration(seconds: 2));
-      
-      // Only start monitoring if still connected
-      if (_bluetoothService.isConnected && mounted) {
-        _startMonitoring();
-      } else if (mounted) {
-        // Connection failed
-        setState(() {
-          _connectedDevice = null;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Bağlantı kurulamadı!'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      // Connection established, user can now use controls
+      // Monitoring will start only if commands fail
+      _disconnectCount = 0;
     }
   }
 
@@ -175,6 +134,12 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
         _lastSentCommand = command;
         _commandCount++;
       });
+    } else {
+      // Command failed - likely connection lost
+      _disconnectCount++;
+      if (_disconnectCount >= 3 && mounted) {
+        _handleDisconnection();
+      }
     }
   }
 
