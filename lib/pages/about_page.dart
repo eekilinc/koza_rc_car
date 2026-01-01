@@ -10,12 +10,14 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
-  String _version = 'v1.0.4';
+  String _version = 'v1.0.9';
+  String _releaseDate = '';
 
   @override
   void initState() {
     super.initState();
     _getVersion();
+    _getReleaseDate();
   }
 
   Future<void> _getVersion() async {
@@ -27,6 +29,23 @@ class _AboutPageState extends State<AboutPage> {
     } catch (e) {
       print('Error getting version: $e');
     }
+  }
+
+  void _getReleaseDate() {
+    // Get current date
+    final now = DateTime.now();
+    final month = _getMonthName(now.month);
+    setState(() {
+      _releaseDate = '${now.day} $month ${now.year}';
+    });
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+      'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+    ];
+    return months[month - 1];
   }
 
   @override
@@ -83,7 +102,7 @@ class _AboutPageState extends State<AboutPage> {
               ),
               const SizedBox(height: 12),
               const Text(
-                'Koza RC Car, HC-06 Bluetooth modülü üzerinden Arduino tabanlı uzaktan kontrollü arabalar için tasarlanmış bir Flutter uygulamasıdır.\n\n'
+                'Koza RC Car, HC-05 ve HC-06 Bluetooth modülleri üzerinden Arduino tabanlı uzaktan kontrollü arabalar için tasarlanmış bir Flutter uygulamasıdır.\n\n'
                 'D-Pad veya Joystick kontrol seçenekleri ile aracınızı kolayca kontrol edebilirsiniz. Komut ayarları sayesinde kontrol tuşlarınızı özelleştirebilirsiniz.',
                 style: TextStyle(height: 1.6),
               ),
@@ -135,9 +154,9 @@ class _AboutPageState extends State<AboutPage> {
                     const SizedBox(height: 12),
                     _buildInfoRow('Oluşturan:', 'Koza Akademi'),
                     const SizedBox(height: 8),
-                    _buildInfoRow('Tarih:', 'Aralık 2025'),
+                    _buildInfoRow('Tarih:', _releaseDate),
                     const SizedBox(height: 8),
-                    _buildInfoRow('Sürüm:', '1.0.0'),
+                    _buildInfoRow('Sürüm:', _version),
                     const SizedBox(height: 8),
                     _buildInfoRow('Platform:', 'Android, iOS, Web'),
                     const SizedBox(height: 8),
@@ -161,7 +180,7 @@ class _AboutPageState extends State<AboutPage> {
               _buildRequirementTile(
                 icon: Icons.bluetooth_connected,
                 title: 'Bluetooth 4.0+',
-                description: 'HC-06 modülü ile iletişim için',
+                description: 'HC-05 ve HC-06 modülleri ile iletişim için',
               ),
               _buildRequirementTile(
                 icon: Icons.settings_remote,

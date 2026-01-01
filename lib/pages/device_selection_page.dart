@@ -3,7 +3,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fbp;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/bluetooth_service.dart';
 
-/// Device selection page for connecting to HC-06
+/// Device selection page for connecting to HC-05 and HC-06
 class DeviceSelectionPage extends StatefulWidget {
   const DeviceSelectionPage({Key? key}) : super(key: key);
 
@@ -17,7 +17,7 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
   List<BondedDevice> _recentlyConnectedDevices = [];
   bool _isLoading = true;
   
-  // Bluetooth mode: true = Classic (HC-06), false = BLE
+  // Bluetooth mode: true = Classic (HC-05/HC-06), false = BLE
   bool _isClassicMode = true;
 
   @override
@@ -215,7 +215,7 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(_isClassicMode 
-              ? 'HC-06 cihazına bağlanılamadı' 
+              ? 'HC-05/HC-06 cihazına bağlanılamadı' 
               : 'BLE cihazına bağlanılamadı'),
             duration: const Duration(seconds: 2),
           ),
@@ -238,7 +238,7 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
             children: [
               // Classic Bluetooth
               Text(
-                'Classic Bluetooth (HC-06)',
+                'Classic Bluetooth (HC-05/HC-06)',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   color: Colors.blue[700],
                   fontWeight: FontWeight.bold,
@@ -249,7 +249,7 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
                 '• Daha yüksek güç tüketimi\n'
                 '• Daha uzun menzil (~100m)\n'
                 '• Daha yüksek veri iletim hızı\n'
-                '• Uydu cihazları ve HC-06 modülleri\n'
+                '• Uydu cihazları ve HC-05/HC-06 modülleri\n'
                 '• Eski cihazlarla uyumlu',
                 style: TextStyle(fontSize: 12, height: 1.6),
               ),
@@ -290,7 +290,7 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Dikkat: Piyasada "HC-06" olarak satılan ürünlerin çoğu aslında BLE cihazıdır. BLE modu denemeyi unutmayın!',
+                        'Dikkat: Piyasada "HC-05" veya "HC-06" olarak satılan ürünlerin çoğu aslında BLE cihazıdır. BLE modu denemeyi unutmayın!',
                         style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -322,12 +322,12 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
             children: [
               // Classic Pairing
               _buildPairingSection(
-                title: '🔵 Classic Bluetooth (HC-06) Eşleştirme',
+                title: '🔵 Classic Bluetooth (HC-05/HC-06) Eşleştirme',
                 steps: [
                   '1. Android cihazınızın Ayarlar → Bluetooth bölümünü açın',
                   '2. "Cihazları bul" veya "Yeni cihaz ekle" seçeneğine basın',
-                  '3. İltişin Bluetooth cihazlarının listesinde HC-06 modülünü bulun',
-                  '4. HC-06\'ya dokunarak eşleştirmeyi başlatın',
+                  '3. İletişim ayarlarında Bluetooth cihazlarının listesinde HC-05 veya HC-06 modülünü bulun',
+                  '4. HC-05/HC-06\'ya dokunarak eşleştirmeyi başlatın',
                   '5. Şifre istenirse varsayılan şifreler: 1234 veya 0000',
                   '6. "Eşleştir" butonuna basın',
                   '7. Eşleştirme başarılı mesajını bekleyin',
@@ -496,7 +496,7 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
                                     segments: const [
                                       ButtonSegment(
                                         value: true,
-                                        label: Text('Classic (HC-06)'),
+                                        label: Text('Classic (HC-05/HC-06)'),
                                         icon: Icon(Icons.bluetooth),
                                       ),
                                       ButtonSegment(
@@ -522,7 +522,7 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 8),
                                 child: Text(
-                                  'HC-06 Classic Bluetooth - Eşleştirilmiş cihazlar',
+                                  'HC-05/HC-06 Classic Bluetooth - Eşleştirilmiş cihazlar',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey[600],
@@ -699,7 +699,7 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
                             Text(
                               _isClassicMode
                                 ? '1. Android Ayarlar → Bluetooth → Cihaz Eşleştir\n'
-                                  '2. HC-06 cihazını bulun ve eşleştirin\n'
+                                  '2. HC-05 veya HC-06 cihazını bulun ve eşleştirin\n'
                                   '3. Eşleştirilen cihazı aşağıdan seçip bağlanın'
                                 : '1. Android Ayarlar → Bluetooth → Cihaz Eşleştir\n'
                                   '2. BLE cihazını bulun ve eşleştirin\n'
@@ -742,7 +742,7 @@ class _DeviceSelectionPageState extends State<DeviceSelectionPage> {
                       child: Center(
                         child: Text(
                           _isClassicMode
-                            ? 'Eşleştirilmiş HC-06 cihazı bulunamadı'
+                            ? 'Eşleştirilmiş HC-05/HC-06 cihazı bulunamadı'
                             : 'Eşleştirilmiş BLE cihazı bulunamadı',
                           style: TextStyle(color: Colors.grey[600]),
                           textAlign: TextAlign.center,
