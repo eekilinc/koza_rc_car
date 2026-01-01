@@ -24,6 +24,8 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   int _controlMode = 0; // 0: D-Pad, 1: Joystick, 2: Extra Features
   int _commandCount = 0;
   bool _isMonitoring = false; // Track if monitoring is active
+  int _disconnectCount = 0; // Counter for debouncing
+  static const int _disconnectThreshold = 3; // Need 3 consecutive failures before disconnect
   
   // Extra control features
   bool _ledOn = false;
@@ -50,15 +52,25 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   void _monitorConnectionState() {
     if (!_isMonitoring || !mounted) return;
     
-    // Periodically check if connection is still active
-    Future.delayed(const Duration(seconds: 1), () {
+    // Check every 5 seconds (longer interval to avoid false positives)
+    Future.delayed(const Duration(seconds: 5), () {
       if (!mounted || !_isMonitoring) return;
       
       // Check if device is still connected
       if (!_bluetoothService.isConnected && _connectedDevice != null) {
-        // Bluetooth connection was lost
-        _handleDisconnection();
+        // Increment disconnect counter (debounce)
+        _disconnectCount++;
+        
+        // Only disconnect after 3 consecutive failures (15 seconds total)
+        if (_disconnectCount >= _disconnectThreshold) {
+          _handleDisconnection();
+        } else {
+          // Continue monitoring
+          _monitorConnectionState();
+        }
       } else if (mounted && _isMonitoring) {
+        // Connection is good, reset counter
+        _disconnectCount = 0;
         // Continue monitoring
         _monitorConnectionState();
       }
@@ -69,6 +81,7 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
     if (!mounted) return;
     
     _stopMonitoring();
+    _disconnectCount = 0; // Reset counter
     
     setState(() {
       _connectedDevice = null;
