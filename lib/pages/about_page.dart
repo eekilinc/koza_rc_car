@@ -1,8 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 /// About page with app information
-class AboutPage extends StatelessWidget {
+class AboutPage extends StatefulWidget {
   const AboutPage({Key? key}) : super(key: key);
+
+  @override
+  State<AboutPage> createState() => _AboutPageState();
+}
+
+class _AboutPageState extends State<AboutPage> {
+  String _version = 'v1.0.4';
+
+  @override
+  void initState() {
+    super.initState();
+    _getVersion();
+  }
+
+  Future<void> _getVersion() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      setState(() {
+        _version = 'v${info.version}';
+      });
+    } catch (e) {
+      print('Error getting version: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +63,9 @@ class AboutPage extends StatelessWidget {
                         color: Colors.blue[100],
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Text(
-                        'v1.0.0',
-                        style: TextStyle(
+                      child: Text(
+                        _version,
+                        style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
                         ),
