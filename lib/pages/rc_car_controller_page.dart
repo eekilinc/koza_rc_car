@@ -23,6 +23,7 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   String _lastSentCommand = '';
   int _controlMode = 0; // 0: D-Pad, 1: Joystick, 2: Extra Features
   int _commandCount = 0;
+  bool _isMonitoring = false; // Track if monitoring is active
   
   // Extra control features
   bool _ledOn = false;
@@ -33,19 +34,31 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   void initState() {
     super.initState();
     _loadCommandConfig();
+  }
+
+  void _startMonitoring() {
+    if (_isMonitoring) return; // Already monitoring
+    
+    _isMonitoring = true;
     _monitorConnectionState();
   }
 
+  void _stopMonitoring() {
+    _isMonitoring = false;
+  }
+
   void _monitorConnectionState() {
+    if (!_isMonitoring || !mounted) return;
+    
     // Periodically check if connection is still active
     Future.delayed(const Duration(seconds: 1), () {
-      if (!mounted) return;
+      if (!mounted || !_isMonitoring) return;
       
       // Check if device is still connected
       if (!_bluetoothService.isConnected && _connectedDevice != null) {
         // Bluetooth connection was lost
         _handleDisconnection();
-      } else if (mounted) {
+      } else if (mounted && _isMonitoring) {
         // Continue monitoring
         _monitorConnectionState();
       }
@@ -54,6 +67,8 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
 
   void _handleDisconnection() {
     if (!mounted) return;
+    
+    _stopMonitoring();
     
     setState(() {
       _connectedDevice = null;
@@ -91,6 +106,8 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
       setState(() {
         _connectedDevice = device;
       });
+      // Start monitoring connection after device is selected
+      _startMonitoring();
     }
   }
 
@@ -132,6 +149,7 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   }
 
   Future<void> _disconnectDevice() async {
+    _stopMonitoring();
     await _bluetoothService.disconnect();
     setState(() {
       _connectedDevice = null;
