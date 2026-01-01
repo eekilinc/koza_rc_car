@@ -1,5 +1,5 @@
 name: koza_rc_car
-version: 1.0.4+4
+version: 1.0.5+5
 description: "HC-06 Bluetooth modülü üzerinden Arduino tabanlı uzaktan kontrollü araba kontrolü için Flutter uygulaması. D-Pad veya Joystick kontrol seçenekleri ile ileri, geri, sol, sağ hareket ettirebileceğiniz mobil robot kontrol uygulaması."
 # Oluşturan: Koza Akademi
 # Tarih: Aralık 2025
