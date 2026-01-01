@@ -106,8 +106,25 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
       setState(() {
         _connectedDevice = device;
       });
-      // Start monitoring connection after device is selected
-      _startMonitoring();
+      
+      // Wait 2 seconds for connection to establish before monitoring
+      await Future.delayed(const Duration(seconds: 2));
+      
+      // Only start monitoring if still connected
+      if (_bluetoothService.isConnected && mounted) {
+        _startMonitoring();
+      } else if (mounted) {
+        // Connection failed
+        setState(() {
+          _connectedDevice = null;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Bağlantı kurulamadı!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
