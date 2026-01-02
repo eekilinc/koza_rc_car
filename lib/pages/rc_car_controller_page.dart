@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/command_config.dart';
 import '../services/bluetooth_service.dart';
+import '../services/connection_stats.dart';
+import '../services/sound_service.dart';
 import '../widgets/dpad_controller.dart';
 import '../widgets/joystick_controller.dart';
 import 'command_settings_page.dart';
 import 'device_selection_page.dart';
 import 'about_page.dart';
+import 'settings_page.dart';
 
 /// Main RC car controller page
 class RCCarControllerPage extends StatefulWidget {
@@ -90,6 +93,11 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
 
     if (device != null) {
       print('Device selected: ${device.name}');
+      
+      // Start connection stats tracking
+      final stats = ConnectionStats();
+      stats.startConnection();
+      
       setState(() {
         _connectedDevice = device;
       });
@@ -101,6 +109,13 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   }
 
   Future<void> _openSettings() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SettingsPage()),
+    );
+  }
+
+  Future<void> _openCommandSettings() async {
     final newConfig = await Navigator.push<CommandConfig>(
       context,
       MaterialPageRoute(
@@ -126,10 +141,24 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
       return;
     }
 
+    final soundService = SoundService();
+    final stats = ConnectionStats();
     final success = await _bluetoothService.sendCommand(command);
+    
+    // Record command in stats
+    stats.recordCommandSent(success);
+    
+    // Play sound feedback
+    if (soundService.soundEnabled) {
+      print('[Sound] Playing command sound (enabled: true)');
+      await soundService.playCommandSound();
+    } else {
+      print('[Sound] Sound disabled - not playing');
+    }
+    
     if (success) {
       // Haptic feedback
-      await HapticFeedback.mediumImpact();
+      HapticFeedback.mediumImpact();
       setState(() {
         _lastSentCommand = command;
         _commandCount++;
@@ -144,6 +173,9 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   }
 
   Future<void> _disconnectDevice() async {
+    final stats = ConnectionStats();
+    stats.endConnection();
+    
     _stopMonitoring();
     await _bluetoothService.disconnect();
     setState(() {
@@ -171,7 +203,7 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
     final success = await _bluetoothService.sendCommand(command);
     if (success) {
       // Haptic feedback
-      await HapticFeedback.mediumImpact();
+      HapticFeedback.mediumImpact();
       setState(() {
         _ledOn = !_ledOn;
         _lastSentCommand = command;
@@ -191,7 +223,7 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
     final success = await _bluetoothService.sendCommand(command);
     if (success) {
       // Light haptic feedback for speed changes
-      await HapticFeedback.lightImpact();
+      HapticFeedback.lightImpact();
       setState(() {
         _lastSentCommand = command;
         _commandCount++;
@@ -382,6 +414,12 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
           PopupMenuButton(
             itemBuilder: (context) => [
               PopupMenuItem(
+                child: const Text('Ayarlar'),
+                onTap: () {
+                  _openSettings();
+                },
+              ),
+              PopupMenuItem(
                 child: const Text('Hakkımda'),
                 onTap: () {
                   Navigator.push(
@@ -446,6 +484,8 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
   }
 
   Widget _buildConnectionCard() {
+    final stats = ConnectionStats();
+    
     return Card(
       elevation: 2,
       child: Padding(
@@ -530,9 +570,62 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
                 ),
               ],
             ),
+            // Connection stats - show only if connected
+            if (_connectedDevice != null) ...[
+              const SizedBox(height: 12),
+              Divider(color: Colors.grey[300]),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildStatItem(
+                    icon: Icons.timer,
+                    label: 'Bağlantı Süresi',
+                    value: stats.connectionTimeString,
+                  ),
+                  _buildStatItem(
+                    icon: Icons.send,
+                    label: 'Komut Gönderilen',
+                    value: '${stats.commandsSent}',
+                  ),
+                  _buildStatItem(
+                    icon: Icons.percent,
+                    label: 'Başarı Oranı',
+                    value: '${(stats.successRate * 100).toStringAsFixed(1)}%',
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildStatItem({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Column(
+      children: [
+        Icon(icon, size: 20, color: Colors.blue),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 10,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
     );
   }
 
@@ -981,7 +1074,10 @@ class _RCCarControllerPageState extends State<RCCarControllerPage> {
             child: const Text('Kapat'),
           ),
           ElevatedButton.icon(
-            onPressed: _openSettings,
+            onPressed: () {
+              Navigator.pop(context);
+              _openCommandSettings();
+            },
             icon: const Icon(Icons.edit),
             label: const Text('Değiştir'),
             style: ElevatedButton.styleFrom(

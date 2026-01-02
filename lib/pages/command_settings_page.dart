@@ -61,138 +61,148 @@ class _CommandSettingsPageState extends State<CommandSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Komut Ayarları'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Movement Commands Section
-            _buildSectionTitle('Hareket Komutları'),
-            const SizedBox(height: 12),
-            _buildCommandField(
-              label: 'İleri Komutu',
-              controller: _forwardController,
-              icon: Icons.arrow_upward,
-            ),
-            const SizedBox(height: 16),
-            _buildCommandField(
-              label: 'Geri Komutu',
-              controller: _backwardController,
-              icon: Icons.arrow_downward,
-            ),
-            const SizedBox(height: 16),
-            _buildCommandField(
-              label: 'Sol Komutu',
-              controller: _leftController,
-              icon: Icons.arrow_back,
-            ),
-            const SizedBox(height: 16),
-            _buildCommandField(
-              label: 'Sağ Komutu',
-              controller: _rightController,
-              icon: Icons.arrow_forward,
-            ),
-            const SizedBox(height: 16),
-            _buildCommandField(
-              label: 'Dur Komutu',
-              controller: _stopController,
-              icon: Icons.stop_circle,
-            ),
-            
-            // Extra Controls Section
-            const SizedBox(height: 32),
-            _buildSectionTitle('Ek Kontroller'),
-            const SizedBox(height: 12),
-            
-            // LED Controls
-            _buildCommandField(
-              label: 'LED Aç Komutu',
-              controller: _ledOnController,
-              icon: Icons.lightbulb,
-            ),
-            const SizedBox(height: 16),
-            _buildCommandField(
-              label: 'LED Kapat Komutu',
-              controller: _ledOffController,
-              icon: Icons.lightbulb_outline,
-            ),
-            const SizedBox(height: 16),
-            
-            // Horn Control
-            _buildCommandField(
-              label: 'Korna Komutu',
-              controller: _hornController,
-              icon: Icons.volume_up,
-            ),
-            
-            // Speed Presets Section
-            const SizedBox(height: 32),
-            _buildSectionTitle('Hız Hazır Ayarları (0-255)'),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildSpeedField(
-                    label: 'Düşük Hız',
-                    controller: _speedLowController,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildSpeedField(
-                    label: 'Orta Hız',
-                    controller: _speedMediumController,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildSpeedField(
-                    label: 'Yüksek Hız',
-                    controller: _speedHighController,
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 32),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                    label: const Text('İptal'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _saveSettings,
-                    icon: const Icon(Icons.check),
-                    label: const Text('Kaydet'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+    try {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Komut Ayarları'),
+          centerTitle: true,
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Movement Commands Section
+              _buildSectionTitle('Hareket Komutları'),
+              const SizedBox(height: 12),
+              _buildCommandField(
+                label: 'İleri Komutu',
+                controller: _forwardController,
+                icon: Icons.arrow_upward,
+              ),
+              const SizedBox(height: 16),
+              _buildCommandField(
+                label: 'Geri Komutu',
+                controller: _backwardController,
+                icon: Icons.arrow_downward,
+              ),
+              const SizedBox(height: 16),
+              _buildCommandField(
+                label: 'Sol Komutu',
+                controller: _leftController,
+                icon: Icons.arrow_back,
+              ),
+              const SizedBox(height: 16),
+              _buildCommandField(
+                label: 'Sağ Komutu',
+                controller: _rightController,
+                icon: Icons.arrow_forward,
+              ),
+              const SizedBox(height: 16),
+              _buildCommandField(
+                label: 'Dur Komutu',
+                controller: _stopController,
+                icon: Icons.stop_circle,
+              ),
+              
+              // Extra Controls Section
+              const SizedBox(height: 32),
+              _buildSectionTitle('Ek Kontroller'),
+              const SizedBox(height: 12),
+              
+              // LED Controls
+              _buildCommandField(
+                label: 'LED Aç Komutu',
+                controller: _ledOnController,
+                icon: Icons.lightbulb,
+              ),
+              const SizedBox(height: 16),
+              _buildCommandField(
+                label: 'LED Kapat Komutu',
+                controller: _ledOffController,
+                icon: Icons.lightbulb_outline,
+              ),
+              const SizedBox(height: 16),
+              
+              // Horn Control
+              _buildCommandField(
+                label: 'Korna Komutu',
+                controller: _hornController,
+                icon: Icons.volume_up,
+              ),
+              
+              // Speed Presets Section
+              const SizedBox(height: 32),
+              _buildSectionTitle('Hız Hazır Ayarları (0-255)'),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildSpeedField(
+                      label: 'Düşük Hız',
+                      controller: _speedLowController,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildSpeedField(
+                      label: 'Orta Hız',
+                      controller: _speedMediumController,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildSpeedField(
+                      label: 'Yüksek Hız',
+                      controller: _speedHighController,
+                    ),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 32),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close),
+                      label: const Text('İptal'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: _saveSettings,
+                      icon: const Icon(Icons.check),
+                      label: const Text('Kaydet'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    } catch (e) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Hata')),
+        body: Center(
+          child: Text('Error: $e'),
+        ),
+      );
+    }
   }
 
   Widget _buildSectionTitle(String title) {

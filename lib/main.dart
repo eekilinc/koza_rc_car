@@ -3,9 +3,18 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fbp;
 import 'dart:io' show Platform;
 import 'pages/rc_car_controller_page.dart';
+import 'services/theme_service.dart';
+import 'services/sound_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize services
+  final themeService = ThemeService();
+  final soundService = SoundService();
+  
+  await themeService.init();
+  await soundService.init();
   
   // Request necessary permissions
   await _requestPermissions();
@@ -49,19 +58,36 @@ Future<void> _requestPermissions() async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late ThemeService _themeService;
+  
+  @override
+  void initState() {
+    super.initState();
+    _themeService = ThemeService();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Koza RC Car',
-      locale: const Locale('tr', 'TR'),
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      home: const RCCarControllerPage(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: _themeService.themeNotifier,
+      builder: (context, theme, child) {
+        return MaterialApp(
+          title: 'Koza RC Car',
+          locale: const Locale('tr', 'TR'),
+          theme: ThemeService.lightTheme,
+          darkTheme: ThemeService.darkTheme,
+          themeMode: theme,
+          home: const RCCarControllerPage(),
+        );
+      },
     );
   }
 }
